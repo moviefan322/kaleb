@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
 
 interface HeaderProps {
@@ -7,9 +7,24 @@ interface HeaderProps {
 }
 
 export default function Header({ setMenuOpen, menuOpen }: HeaderProps) {
+  const [scrolled, setScrolled] = useState(false);
+
   const handleMenuClick = () => {
     setMenuOpen(!menuOpen);
   };
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 50) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [scrolled]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -18,23 +33,22 @@ export default function Header({ setMenuOpen, menuOpen }: HeaderProps) {
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, []);
+
   return (
     <>
-      <div className="container">
+      <div className={`container ${scrolled ? "scrolled" : ""}`}>
         <div className="text-section">
           <p className="kaleb">Kaleb Clark</p>
           <p className="sub">MERIDIAN YOGA + BODY WORK</p>
         </div>
         <div className="menuButton">
-          <button onClick={handleMenuClick}>
-            <button onClick={handleMenuClick} className="icon-button">
-              <div className={`icon ${menuOpen ? "fade-out" : "fade-in"}`}>
-                <Menu size={32} />
-              </div>
-              <div className={`icon ${menuOpen ? "fade-in" : "fade-out"}`}>
-                <X size={32} />
-              </div>
-            </button>
+          <button onClick={handleMenuClick} className="icon-button">
+            <div className={`icon ${menuOpen ? "fade-out" : "fade-in"}`}>
+              <Menu size={32} />
+            </div>
+            <div className={`icon ${menuOpen ? "fade-in" : "fade-out"}`}>
+              <X size={32} />
+            </div>
           </button>
         </div>
       </div>
@@ -52,6 +66,13 @@ export default function Header({ setMenuOpen, menuOpen }: HeaderProps) {
           align-items: center;
           padding: 1rem;
           z-index: 2;
+          background: transparent;
+          transition: background-color 0.6s ease-in-out;
+        }
+        .container.scrolled {
+          background: var(--bg);
+          backdrop-filter: blur(10px);
+          box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
         }
         .text-section {
           display: flex;

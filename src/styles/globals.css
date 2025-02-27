@@ -1,3 +1,10 @@
+:root {
+  --bg: #f6f1e9;
+  --blues: #5562af;
+  --pink: #ff93a5;
+  --red: #ac4821;
+}
+
 html,
 body {
   max-width: 100vw;
@@ -6,7 +13,7 @@ body {
 
 body {
   color: black;
-  background: #F6F1E9;
+  background: var(--bg);
   font-family: Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -41,4 +48,12 @@ button:active {
   outline: none !important;
   box-shadow: none !important;
   background: transparent !important;
+}
+
+.mainButton {
+  color: var(--blues);
+  border: 2px solid var(--blues);
+  padding: 0.5rem 1rem;
+  border-radius: 1rem;
+  cursor: pointer;
 }
