@@ -60,8 +60,10 @@ export default function Header({
         </div>
         {isAdmin && (
           <div className="flex-column">
-            <p>Admin Mode</p>
-            <button onClick={handleLogout}>End Session</button>
+            <p className="admin-text">Admin Mode</p>
+            <button className="mainButton" onClick={handleLogout}>
+              End Session
+            </button>
           </div>
         )}
         <div className="menuButton">
@@ -132,6 +134,18 @@ export default function Header({
           display: flex;
           flex-direction: column;
           gap: 0.5rem;
+          justify-content: center;
+          align-items: center;
+        }
+        .mainButton {
+          padding: 0.2rem 0.3rem;
+        }
+        .admin-text {
+          font-size: 16px;
+          color: white;
+          font-family: "Monospace";
+          background: green;
+          padding: 0.2rem 0.3rem;
         }
       `}</style>
     </>

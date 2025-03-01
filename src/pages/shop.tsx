@@ -2,38 +2,30 @@
 
 import { useEffect, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
-import Image from "next/image";
+import { Item as ItemType } from "@/types/item";
+import ItemComponent from "@/components/item";
 
-interface Item {
-  id: number;
-  name: string;
-  description: string;
-  price: string;
-  image_url: string;
-  in_stock: boolean;
-  visible: boolean;
-}
-
-export default function Shop() {
-  const [items, setItems] = useState<Item[]>([]);
+export default function Shop({ isAdmin }: { isAdmin: boolean }) {
+  const [editIndex, setEditIndex] = useState<number | null>(null);
+  const [items, setItems] = useState<ItemType[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchItems = async () => {
-      const supabase = createClient();
-      const response = await supabase
-        .from("item")
-        .select("*")
-        .order("id", { ascending: true });
-      console.log("response", response);
-      if (response.error) {
-        console.error("Error fetching items:", response.error);
-      } else {
-        setItems(response.data || []);
-      }
-      setLoading(false);
-    };
+  const fetchItems = async () => {
+    const supabase = createClient();
+    const response = await supabase
+      .from("item")
+      .select("*")
+      .order("id", { ascending: true });
+    console.log("response", response);
+    if (response.error) {
+      console.error("Error fetching items:", response.error);
+    } else {
+      setItems(response.data || []);
+    }
+    setLoading(false);
+  };
 
+  useEffect(() => {
     fetchItems();
   }, []);
 
@@ -45,32 +37,14 @@ export default function Shop() {
         <h1>SHOP</h1>
         <div className="shop-grid">
           {items.map((item) => (
-            <div key={item.id} className="shop-item">
-              <div className="image=wrapper">
-                <Image
-                  priority
-                  src={item.image_url}
-                  width={200}
-                  height={200}
-                  alt="animal photo"
-                />
-              </div>
-              <h2>{item.name}</h2>
-              <p>{item.description}</p>
-              <p className="price">${item.price}</p>
-              <div>
-                {item.in_stock ? (
-                  <span className="in-stock">In Stock</span>
-                ) : (
-                  <span className="out-stock">Out of Stock</span>
-                )}
-              </div>
-
-              <div className="button-row">
-                <button className="mainButton">Add To Cart</button>
-                <button className="mainButton">Buy Now</button>
-              </div>
-            </div>
+            <ItemComponent
+              key={item.id}
+              item={item}
+              isAdmin={isAdmin}
+              editIndex={editIndex}
+              setEditIndex={setEditIndex}
+              fetchItems={fetchItems}
+            />
           ))}
         </div>
       </div>
@@ -82,34 +56,6 @@ export default function Shop() {
           grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
           gap: 20px;
           padding: 20px;
-        }
-        .shop-item {
-          border: 1px solid #ddd;
-          padding: 15px;
-          border-radius: 1rem;
-          text-align: center;
-        }
-        .shop-item > * {
-          margin-bottom: 10px;
-        }
-        .shop-item img {
-          max-width: 100%;
-          height: auto;
-          border-radius: 8px;
-        }
-        .price {
-          font-weight: bold;
-          color: #008000;
-        }
-        .in-stock {
-          color: green;
-        }
-        .out-stock {
-          color: red;
-        }
-        .button-row {
-          display: flex;
-          justify-content: space-around;
         }
       `}</style>
     </>

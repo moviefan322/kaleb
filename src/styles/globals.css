@@ -65,3 +65,14 @@ button:active {
   align-items: center;
   padding: 1rem;
 }
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
