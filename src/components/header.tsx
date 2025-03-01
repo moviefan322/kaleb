@@ -1,16 +1,33 @@
+"use client";
+
 import { useEffect, useState } from "react";
+import { createClient } from "@/utils/supabase/client";
 import { Menu, X } from "lucide-react";
 
 interface HeaderProps {
   setMenuOpen: (open: boolean) => void;
   menuOpen: boolean;
+  isAdmin: boolean;
+  setIsAdmin: (isAdmin: boolean) => void;
 }
 
-export default function Header({ setMenuOpen, menuOpen }: HeaderProps) {
+export default function Header({
+  setMenuOpen,
+  menuOpen,
+  isAdmin,
+  setIsAdmin,
+}: HeaderProps) {
   const [scrolled, setScrolled] = useState(false);
 
   const handleMenuClick = () => {
     setMenuOpen(!menuOpen);
+  };
+
+  const handleLogout = async () => {
+    const supabase = createClient();
+    await supabase.auth.signOut();
+
+    setIsAdmin(false);
   };
 
   useEffect(() => {
@@ -41,6 +58,12 @@ export default function Header({ setMenuOpen, menuOpen }: HeaderProps) {
           <p className="kaleb">Kaleb Clark</p>
           <p className="sub">MERIDIAN YOGA + BODY WORK</p>
         </div>
+        {isAdmin && (
+          <div className="flex-column">
+            <p>Admin Mode</p>
+            <button onClick={handleLogout}>End Session</button>
+          </div>
+        )}
         <div className="menuButton">
           <button onClick={handleMenuClick} className="icon-button">
             <div className={`icon ${menuOpen ? "fade-out" : "fade-in"}`}>
@@ -104,6 +127,11 @@ export default function Header({ setMenuOpen, menuOpen }: HeaderProps) {
         .fade-out {
           opacity: 0;
           transform: scale(0.8);
+        }
+        .flex-column {
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
         }
       `}</style>
     </>

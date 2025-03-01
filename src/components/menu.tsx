@@ -22,6 +22,9 @@ export default function Menu({ closeMenu }: { closeMenu: () => void }) {
         <li>
           <button onClick={() => navigateToPage("/shop")}>Shop</button>
         </li>
+        <li>
+          <button onClick={() => navigateToPage("/login")}>Admin</button>
+        </li>
       </ul>
 
       <style jsx>{`

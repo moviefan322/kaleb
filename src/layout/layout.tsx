@@ -1,27 +1,43 @@
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import Header from "../components/header";
 import Footer from "../components/footer";
 import Menu from "../components/menu";
 
 interface LayoutProps {
   children: React.ReactNode;
+  isAdmin: boolean;
+  setIsAdmin: (isAdmin: boolean) => void;
 }
 
-export default function Layout({ children }: LayoutProps) {
+export default function Layout({ children, isAdmin, setIsAdmin }: LayoutProps) {
   const [menuOpen, setMenuOpen] = useState(false);
+
+  if (isAdmin === undefined) {
+    return <p>Loading...</p>;
+  }
+
   return (
-    <>
-      <Header setMenuOpen={setMenuOpen} menuOpen={menuOpen} />
+    <Suspense fallback={<p>Loading...</p>}>
+      <Header
+        setMenuOpen={setMenuOpen}
+        menuOpen={menuOpen}
+        isAdmin={isAdmin}
+        setIsAdmin={setIsAdmin}
+      />
       <div
         className={`main-section content-wrapper ${
           menuOpen ? "fade-out" : "fade-in"
         }`}
       >
         {children}
-       <Footer />
+        <Footer />
       </div>
 
-      <div className={`main-section menu-wrapper ${menuOpen ? "fade-in" : "fade-out"}`}>
+      <div
+        className={`main-section menu-wrapper ${
+          menuOpen ? "fade-in" : "fade-out"
+        }`}
+      >
         <Menu closeMenu={() => setMenuOpen(false)} />
       </div>
 
@@ -75,6 +91,6 @@ export default function Layout({ children }: LayoutProps) {
           pointer-events: all;
         }
       `}</style>
-    </>
+    </Suspense>
   );
 }

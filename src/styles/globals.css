@@ -57,3 +57,11 @@ button:active {
   border-radius: 1rem;
   cursor: pointer;
 }
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+}
