@@ -92,10 +92,13 @@ export default function AddItemModal({
     }
 
     try {
-      new URL(itemImageUrl);
+      const url = new URL(itemImageUrl);
+      if (!url.href.startsWith("https://i.ibb.co/")) {
+        throw new Error("Invalid domain");
+      }
       setImageUrlError("");
     } catch {
-      setImageUrlError("Invalid image URL.");
+      setImageUrlError("Image URL must start with 'https://i.ibb.co/'.");
       isValid = false;
     }
 

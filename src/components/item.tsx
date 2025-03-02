@@ -43,22 +43,12 @@ export default function ItemComponent({
 
   const handleSave = async () => {
     if (!validateInputs()) return;
-
-    console.log("Saving item with:", {
-      name: itemName,
-      description: itemDescription,
-      price: itemPrice,
-      inStock: itemInStock,
-      visible: itemVisible,
-      imageUrl: itemImageUrl,
-    });
-
     setIsLoading(true);
 
     const supabase = createClient();
 
-    const { data, error } = await supabase
-      .from("item") // ✅ Use "item" instead of "items"
+    const { error } = await supabase
+      .from("item")
       .update({
         id: item.id,
         name: itemName,
@@ -69,7 +59,7 @@ export default function ItemComponent({
         image_url: itemImageUrl,
       })
       .eq("id", item.id)
-      .select("*"); // ✅ Ensure updated data is returned
+      .select("*");
 
     if (error) {
       console.error("❌ Error updating item:", error.message);
@@ -77,20 +67,39 @@ export default function ItemComponent({
       return;
     }
 
-    console.log("✅ Item updated successfully!", data);
-
     setEditIndex(null);
     setIsLoading(false);
     fetchItems();
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     const userConfirmed = window.confirm(
       "Are you sure you want to delete this item?"
     );
-    if (userConfirmed) {
-      console.log("Deleting item", item.id);
-      if (isEdit) setEditIndex(null);
+
+    if (!userConfirmed) return;
+
+    console.log("Deleting item", item.id);
+
+    try {
+      const supabase = createClient();
+
+      const { data, error } = await supabase
+        .from("item")
+        .delete()
+        .eq("id", item.id);
+
+      if (error) {
+        console.error("❌ Error deleting item:", error.message);
+        return;
+      }
+
+      console.log("✅ Item deleted successfully:", data);
+
+      fetchItems();
+      setEditIndex(null);
+    } catch (err) {
+      console.error("❌ Unexpected error deleting item:", err);
     }
   };
 
@@ -131,10 +140,13 @@ export default function ItemComponent({
     }
 
     try {
-      new URL(itemImageUrl);
+      const url = new URL(itemImageUrl);
+      if (!url.href.startsWith("https://i.ibb.co/")) {
+        throw new Error("Invalid domain");
+      }
       setImageUrlError("");
     } catch {
-      setImageUrlError("Invalid image URL.");
+      setImageUrlError("Image URL must start with 'https://i.ibb.co/'.");
       isValid = false;
     }
 
@@ -161,12 +173,17 @@ export default function ItemComponent({
         {isAdmin && (
           <div>
             {!isEdit && (
-              <button
-                onClick={() => setEditIndex(item.id)}
-                className="edit-button edit"
-              >
-                <Pencil size={24} color="pink" />
-              </button>
+              <>
+                <button className="edit-button delete" onClick={handleDelete}>
+                  <Trash size={24} color="white" />
+                </button>
+                <button
+                  onClick={() => setEditIndex(item.id)}
+                  className="edit-button edit"
+                >
+                  <Pencil size={24} color="pink" />
+                </button>
+              </>
             )}
           </div>
         )}
@@ -303,9 +320,6 @@ export default function ItemComponent({
                 </button>
                 <button className="edit-button cancel" onClick={handleCancel}>
                   <X size={24} color="white" />
-                </button>
-                <button className="edit-button delete" onClick={handleDelete}>
-                  <Trash size={24} color="white" />
                 </button>
               </div>
             </div>
