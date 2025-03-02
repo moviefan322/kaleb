@@ -359,7 +359,7 @@ export default function ItemComponent({
 
         .edit {
           border: 2px solid white;
-          background: #929292;
+          background: #000000;
         }
 
         .cancel {
