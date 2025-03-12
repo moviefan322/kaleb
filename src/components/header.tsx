@@ -84,6 +84,7 @@ export default function Header({
           position: fixed;
           top: 0;
           width: 100%;
+          max-width: 100vw;
           height: 75px;
           display: flex;
           flex-direction: row;

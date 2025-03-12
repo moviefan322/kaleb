@@ -37,6 +37,35 @@ export default function Home() {
           </div>
         </div>
         <div className="lg-row">
+          <div className="text-section top-text-section">
+            <h3>Meridian Yoga therapy + Bodywork +</h3>
+            <p>
+              Katharsis can be described as release of strong emotions to
+              achieve a state of renewal and restoration. By processing our
+              feelings and emotions and acknowledging the connection they have
+              to our mental, spiritual and physical well being we can begin to
+              heal ourselves from the root.
+            </p>
+            <p>
+              Our purpose is to provide a clear pathway to an embodied practice
+              that is genuinely designed for each individual to support and aid
+              in their body{`'`}s innate wisdom to heal.
+            </p>
+            <p>
+              While offering services and products to further enhance the
+              healing experience through the use of meridian yoga therapy, Thai
+              yoga massage, (self)acupressure, cupping, ayurvedic self care
+              rituals & products, and crystal healing. We strongly believe the
+              most powerful healing weapon is YOU.
+            </p>
+            <p className="quote">
+              “(Wo)Man is God afraid, (wo)man can only relinquish fear by
+              walking up to what he/she is afraid of.” <br />
+              <span className="quote-author">-Florence Scovel Shinn</span>
+            </p>
+          </div>
+        </div>
+        <div className="lg-row">
           <div className="photo-oval-wrapper">
             <div className="photo-oval-container">
               <div className="photo1-container rotate">
@@ -67,7 +96,7 @@ export default function Home() {
         </div>
         <div className="lg-row">
           <div className="text-section">
-            <h3>Body Work/thai yoga massage/accup/cupping</h3>
+            <h3>BodyWork + thai yoga massage + accup + cupping</h3>
             <p>
               <b>Thai Yoga</b> massage is a synthesis of yoga, Ayurveda, and
               meditation. In receiving a Thai yoga massage, one is passively
@@ -75,15 +104,17 @@ export default function Home() {
               be described as assisted Hatha yoga. Thai yoga massage
               incorporates martial arts moves, rhythmic motion, palming, and
               thumbing along energy lines of the recipient by the practitioner.
-              Along with gentle stretching and breathwork. Thai Yoga massage
-              improves circulation, relieves muscular tension and spasms, helps
-              expedite metabolism, boosts the immune system, and balances the
-              body energetically, inducing a calm mental state. The origins of
-              this art can be traced back 2,500 years to India and the spread of
-              Buddhism. The founding father of Thai Yoga massage was Jivaka
-              Kumarbhaccha. A celebrated yogi and doctor.
-              <br />
-              <br />
+              Along with gentle stretching and breathwork.
+            </p>
+            <p>
+              Thai Yoga massage improves circulation, relieves muscular tension
+              and spasms, helps expedite metabolism, boosts the immune system,
+              and balances the body energetically, inducing a calm mental state.
+              The origins of this art can be traced back 2,500 years to India
+              and the spread of Buddhism. The founding father of Thai Yoga
+              massage was Jivaka Kumarbhaccha. A celebrated yogi and doctor.
+            </p>
+            <p>
               <b>Acupressure</b> - The body consists of 12 major meridian
               pathways that form a continuous web-like network along which vital
               energy flows. These structures are invisible to the naked eye but
@@ -94,35 +125,30 @@ export default function Home() {
               stress. By pressing and exploring along these pathways we can find
               clues and insights to healing the root cause of your discomfort,
               tension and pain.
-              <br />
-              <br />
-              <b>Cupping</b> - When muscles or connective get tense or contracted for
-              long periods of time, the blood flow diminishes. Cupping Therapy
-              is an ancient technique that uses plastic cups of various sizes to
-              suction areas of skin and muscle. Cupping is great for overall
-              relaxation and to release muscle tension because it moves blood
-              and Qi stagnation. Cupping stretches the tissue up away from the
-              body and draws in new fresh blood and fluids to the staganted
-              areas, revitalizing the flow of energy and nutrients.
-              <br />
-              <br />
-              {`In every session, I
-            incorporate an essential element: relaxation. I believe it to be a
-            key ingredient, providing your body with the time and space to
-            initiate its own healing process.`}
             </p>
-            <button className="mainButton">VIEW SCHEDULE</button>
+            <p>
+              <b>Cupping</b> - When muscles or connective get tense or
+              contracted for long periods of time, the blood flow diminishes.
+              Cupping Therapy is an ancient technique that uses plastic cups of
+              various sizes to suction areas of skin and muscle. Cupping is
+              great for overall relaxation and to release muscle tension because
+              it moves blood and Qi stagnation. Cupping stretches the tissue up
+              away from the body and draws in new fresh blood and fluids to the
+              staganted areas, revitalizing the flow of energy and nutrients.
+            </p>
           </div>
-          <div className="squircle-container">
-            <div className="squircle-image-container">
-              {/* Background Image */}
-              <Image
-                src="/images/K-30.jpg"
-                alt="Photo 1"
-                layout="fill"
-                objectFit="cover"
-                quality={80}
-              />
+          <div className="photo-oval-wrapper">
+            <div className="photo-oval-container">
+              <div className="photo1-container image-mirror rotate">
+                <Image
+                  priority
+                  src="/images/K-30.jpg"
+                  alt="Photo 3"
+                  layout="fill"
+                  objectFit="cover"
+                  quality={80}
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -153,12 +179,11 @@ export default function Home() {
           align-items: center;
           padding: 1rem;
           margin: auto;
+          max-width: 100vw;
         }
-
         .photo1-wrapper {
           padding: 1rem;
         }
-
         .photo1-container {
           position: relative;
           width: 100%;
@@ -169,8 +194,15 @@ export default function Home() {
           overflow: hidden;
           min-width: 300px;
         }
-
-        .photo-oval-wrapper {
+        .squircle-image-container {
+          height: 500px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          overflow: hidden;
+          min-width: 300px;
+        }
+        .photo-oval-wrapper .photo-squircle-wrapper {
           margin-top: 2rem;
           padding: 1rem;
         }
@@ -186,6 +218,7 @@ export default function Home() {
           clip-path: ellipse(50% 50% at center);
           transform: rotate(20deg);
         }
+
         .image-container {
           position: absolute;
           width: 120%;
@@ -197,9 +230,27 @@ export default function Home() {
         .rotate {
           transform: scale(1.2) rotate(-10deg);
         }
-
+        .top-text-section {
+          margin: auto;
+          min-width: 60%;
+          padding: 3rem 0;
+        }
+        .quote {
+          font-size: 17px;
+          color: purple;
+          font-weight: bold;
+          align-self: center;
+          margin: auto;
+        }
+        .quote-author {
+          float: right;
+          padding: 0.5rem 5rem;
+          text-align: center;
+          width: 100%;
+        }
         .text-section {
           margin-top: 2rem;
+          overflow: wrap;
         }
         .text-section h3 {
           font-size: 42px;
@@ -207,18 +258,21 @@ export default function Home() {
           color: var(--blues);
           text-align: center;
           line-height: 0.9;
+          max-width: 100%;
         }
         .text-section p {
           margin: 2rem 1rem;
+          text-align: justify;
         }
         .text-section button {
           margin: 1rem;
         }
         .squircle-container {
           position: relative;
-          width: 400px;
-          height: 400px;
-          overflow: hidden;
+          /* transform: scale(0.8); */
+          width: 100%; /* Allow it to be responsive */
+          max-width: 400px; /* Ensure it doesn’t stretch beyond this */
+          max-height: 400px;
           clip-path: path(
             "M 0 200 
      C 0 23 23 0 200 0 
@@ -226,7 +280,6 @@ export default function Home() {
        400 377 377 400 200 400 
        23 400 0 377 0 200"
           );
-          background: var(--bg);
         }
 
         .squircle-image-container {
@@ -260,6 +313,9 @@ export default function Home() {
           height: 1px;
           background: var(--blues);
           margin: 4rem 0;
+        }
+        .border {
+          border: 1px red solid;
         }
 
         // MEDIA QUERIES for mid-size screens
