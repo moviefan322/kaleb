@@ -11,124 +11,118 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="index-container">
-        <div className="photo1-wrapper">
-          <div className="photo1-container">
-            <Image
-              priority
-              src="/images/K-34.jpg"
-              alt="Photo 1"
-              layout="fill"
-              objectFit="cover"
-              quality={80}
-            />
-
-            <div className="content">
-              <h1>HOME/PHOTO 1</h1>
+        <div className="lg-row">
+          <div className="photo1-wrapper photolg-wrapper">
+            <div className="photo1-container top-photo">
+              <Image
+                priority
+                src="/images/K-17.jpg"
+                alt="Photo 1"
+                layout="fill"
+                objectFit="scale-down"
+                quality={80}
+              />
             </div>
           </div>
-        </div>
-        <div className="photo1-wrapper">
-          <div className="photo1-container">
-            {/* Background Image */}
-            <Image
-              src="/images/K-01.jpg"
-              alt="Photo 1"
-              layout="fill"
-              objectFit="cover"
-              quality={80}
-            />
-
-            <div className="content">
-              <h1>HOME/PHOTO 2</h1>
-            </div>
-          </div>
-        </div>
-        <div className="photo-oval-wrapper">
-          <div className="photo-oval-container">
-            <div className="image-container">
+          <div className="photo1-wrapper photolg-wrapper">
+            <div className="photo1-container top-photo">
               <Image
                 src="/images/K-19.jpg"
-                alt="Photo 3"
+                alt="Photo 1"
+                layout="fill"
+                objectFit="scale-down"
+                quality={80}
+              />
+            </div>
+          </div>
+        </div>
+        <div className="lg-row">
+          <div className="photo-oval-wrapper">
+            <div className="photo-oval-container">
+              <div className="photo1-container rotate">
+                <Image
+                  src="/images/K-34.jpg"
+                  alt="Photo 3"
+                  layout="fill"
+                  objectFit="cover"
+                  quality={80}
+                />
+              </div>
+            </div>
+          </div>
+          <div className="text-section">
+            <h3>
+              Meridian yoga therapy <br />+ Class schedule
+            </h3>
+            <p>
+              Meridian Yoga is a therapeutic method of meditative movements and
+              postures that fuse the eastern sciences of Yoga and TCM to foster
+              a deep awareness of the energies that inhabit our bodies and the
+              spaces they occupy, often causing us to feel and associate with
+              certain emotions that can be destructive over a long period of
+              time
+            </p>
+            <button className="mainButton">VIEW SCHEDULE</button>
+          </div>
+        </div>
+        <div className="lg-row">
+          <div className="text-section">
+            <h3>Body Work/thai yoga massage/accup/cupping</h3>
+            <p>
+              <b>Thai Yoga</b> massage is a synthesis of yoga, Ayurveda, and
+              meditation. In receiving a Thai yoga massage, one is passively
+              receiving the benefits of the practice of Yoga. This technique can
+              be described as assisted Hatha yoga. Thai yoga massage
+              incorporates martial arts moves, rhythmic motion, palming, and
+              thumbing along energy lines of the recipient by the practitioner.
+              Along with gentle stretching and breathwork. Thai Yoga massage
+              improves circulation, relieves muscular tension and spasms, helps
+              expedite metabolism, boosts the immune system, and balances the
+              body energetically, inducing a calm mental state. The origins of
+              this art can be traced back 2,500 years to India and the spread of
+              Buddhism. The founding father of Thai Yoga massage was Jivaka
+              Kumarbhaccha. A celebrated yogi and doctor.
+              <br />
+              <br />
+              <b>Acupressure</b> - The body consists of 12 major meridian
+              pathways that form a continuous web-like network along which vital
+              energy flows. These structures are invisible to the naked eye but
+              travel through our connective tissue. You can think of them as
+              “streams or currents” of energy. Along each meridian lie points
+              that when stimulated by pressure, stretching, friction, and
+              massage can access deeper energy and relieve pain, tension and
+              stress. By pressing and exploring along these pathways we can find
+              clues and insights to healing the root cause of your discomfort,
+              tension and pain.
+              <br />
+              <br />
+              <b>Cupping</b> - When muscles or connective get tense or contracted for
+              long periods of time, the blood flow diminishes. Cupping Therapy
+              is an ancient technique that uses plastic cups of various sizes to
+              suction areas of skin and muscle. Cupping is great for overall
+              relaxation and to release muscle tension because it moves blood
+              and Qi stagnation. Cupping stretches the tissue up away from the
+              body and draws in new fresh blood and fluids to the staganted
+              areas, revitalizing the flow of energy and nutrients.
+              <br />
+              <br />
+              {`In every session, I
+            incorporate an essential element: relaxation. I believe it to be a
+            key ingredient, providing your body with the time and space to
+            initiate its own healing process.`}
+            </p>
+            <button className="mainButton">VIEW SCHEDULE</button>
+          </div>
+          <div className="squircle-container">
+            <div className="squircle-image-container">
+              {/* Background Image */}
+              <Image
+                src="/images/K-30.jpg"
+                alt="Photo 1"
                 layout="fill"
                 objectFit="cover"
                 quality={80}
               />
-            </div>
-            <div className="content">
-              <h1>HOME/PHOTO 3</h1>
-            </div>
-          </div>
-        </div>
-        <div className="text-section">
-          <h3>Meridian Yoga</h3>
-          <p>
-            Meridian Yoga Is a combination of two ancient healing forms. Chinese
-            Medicine and Yoga. The two are very similar especially in their
-            holistic approach to living. In a meridian yoga class, we combine
-            their therapeutic aspects of internal physical exploration and
-            healing. <br /> <br />
-            Classes are geared toward every body, beginners welcome! Meridian
-            Yoga classes give you an intro to these pathways or meridians of the
-            body. These can be used to recognize patterns, go deeper in
-            postures, as focus points, or as a guide to feeling and
-            understanding the body. We discuss where they are, their physical
-            and emotional properties, and how we can heal ourselves through
-            movement and awareness.
-            <br /> <br /> We also cover acupressure & warm-up techniques that
-            could be done every day for overall well-being. These techniques
-            that can be done any time on or off the mat. These are all level
-            classes with no experience of yoga or Chinese Medicine necessary.
-            <br /> <br />I see myself as a student first and teach what I
-            believe in and practice.
-            <br /> <br />
-            Let’s learn and grow together.
-          </p>
-          <button className="mainButton">VIEW SCHEDULE</button>
-        </div>
-        <div className="text-section">
-          <h3>Massaage + Body Work</h3>
-          <p>
-            {`My massage practice is the culmination of eight years of experience,
-            integrating everything I've learned from working with others. My
-            studies in massage equipped me with the tools to bring healing,
-            while my exploration of Chinese Medicine provided a scientific
-            foundation for what my intuition had always known.`}
-            <br />
-            <br />
-            {`In my practice, I've discovered that the source of pain is not always where it
-            initially presents. By understanding the patterns and pathways of
-            the body, known as meridians, I can offer clues and a key to healing
-            the root cause of pain both distally and directly.`}
-            <br />
-            <br />
-            {`Specializing in
-            providing relief for those in pain, I go beyond our sessions by
-            offering personalized recommendations for yoga postures and
-            acupressure points to work on at home. During our time together, I
-            tailor the session to target and explore tensions using the pressure
-            that you prefer and your body requests.`}
-            <br />
-            <br />
-            {`In every session, I
-            incorporate an essential element: relaxation. I believe it to be a
-            key ingredient, providing your body with the time and space to
-            initiate its own healing process.`}
-          </p>
-          <button className="mainButton">VIEW SCHEDULE</button>
-        </div>
-        <div className="squircle-container">
-          <div className="squircle-image-container">
-            {/* Background Image */}
-            <Image
-              src="/images/K-30.jpg"
-              alt="Photo 1"
-              layout="fill"
-              objectFit="cover"
-              quality={80}
-            />
-
-            <div className="content">
-              <h1>HOME/PHOTO 4</h1>
             </div>
           </div>
         </div>
@@ -158,6 +152,7 @@ export default function Home() {
           justify-content: center;
           align-items: center;
           padding: 1rem;
+          margin: auto;
         }
 
         .photo1-wrapper {
@@ -172,6 +167,7 @@ export default function Home() {
           justify-content: center;
           align-items: center;
           overflow: hidden;
+          min-width: 300px;
         }
 
         .photo-oval-wrapper {
@@ -196,15 +192,12 @@ export default function Home() {
           height: 100%;
           transform: rotate(-20deg);
           transform: translate(-5%, 0%);
+          min-width: 300px;
         }
-        .content {
-          z-index: 1;
-          color: white;
-          text-align: center;
-          background: rgba(0, 0, 0, 0.5);
-          padding: 20px;
-          border-radius: 8px;
+        .rotate {
+          transform: scale(1.2) rotate(-10deg);
         }
+
         .text-section {
           margin-top: 2rem;
         }
@@ -267,6 +260,99 @@ export default function Home() {
           height: 1px;
           background: var(--blues);
           margin: 4rem 0;
+        }
+
+        // MEDIA QUERIES for mid-size screens
+
+        @media (min-width: 600px) {
+          .index-container {
+            padding: 2rem;
+          }
+          .lg-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 5rem;
+          }
+          .photolg-wrapper {
+            width: 45%;
+            margin: auto;
+          }
+          .photo1-container {
+            height: 600px;
+          }
+          .photo-oval-wrapper {
+            scale: 1.2;
+            margin: auto;
+          }
+          .photo-oval-container {
+            height: 600px;
+          }
+          .text-section {
+            width: 50%;
+          }
+          .text-section h3 {
+            font-size: 48px;
+          }
+          .squircle-container {
+            margin: auto;
+          }
+
+          .squircle-image-container {
+            width: 500px;
+            height: 500px;
+          }
+          .user-testimony-section h3 {
+            font-size: 42px;
+          }
+        }
+
+        // MEDIA QUERIES for desktop
+
+        @media (min-width: 900px) {
+          .index-container {
+            padding: 2rem;
+          }
+          .lg-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 5rem;
+          }
+          .photolg-wrapper {
+            width: 45%;
+            margin: auto;
+          }
+          .photo1-container {
+            height: 600px;
+          }
+          .photo-oval-wrapper {
+            scale: 1.2;
+            margin: auto;
+          }
+          .photo-oval-container {
+            height: 600px;
+          }
+          .text-section {
+            width: 50%;
+          }
+          .text-section h3 {
+            font-size: 48px;
+          }
+          .squircle-container {
+            margin: auto;
+            transform: scale(1.2);
+          }
+
+          .squircle-image-container {
+            width: 500px;
+            height: 500px;
+          }
+          .user-testimony-section h3 {
+            font-size: 42px;
+          }
         }
       `}</style>
     </>
