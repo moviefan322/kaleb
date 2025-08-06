@@ -77,3 +77,15 @@ button:active {
   flex-direction: row;
   align-items: center;
 }
+
+.nakedButt {
+  all: unset;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-tap-highlight-color: transparent !important;
+  -webkit-user-select: none;
+  user-select: none;
+  touch-action: manipulation;
+}
