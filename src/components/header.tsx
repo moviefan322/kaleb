@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { createClient } from "@/utils/supabase/client";
 import { Menu, X } from "lucide-react";
+import { clearSession } from "@/lib/session";
 
 interface HeaderProps {
   setMenuOpen: (open: boolean) => void;
@@ -24,9 +24,7 @@ export default function Header({
   };
 
   const handleLogout = async () => {
-    const supabase = createClient();
-    await supabase.auth.signOut();
-
+    clearSession();
     setIsAdmin(false);
   };
 

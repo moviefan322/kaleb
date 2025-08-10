@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import { useRouter } from "next/router";
-import { createClient } from "@/utils/supabase/client";
+import { rawFetch } from "@/lib/http";
+import { saveSession, clearSession, getRefreshToken } from "@/lib/session";
+import type { User, Tokens } from "@/types/auth";
 
 interface LoginProps {
   isAdmin: boolean;
@@ -14,21 +16,60 @@ export default function Login({ isAdmin, setIsAdmin }: LoginProps) {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
 
-  const supabase = createClient();
   const router = useRouter();
 
   const handleLogin = async () => {
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    setMessage("");
+    try {
+      const res = await rawFetch("/v1/auth/login", {
+        method: "POST",
+        body: JSON.stringify({ email, password }),
+      });
 
-    if (error) {
-      setMessage(`Error: ${error.message}`);
-    } else {
-      setIsAdmin(true);
+      if (!res.ok) {
+        // server typically returns { code, message }
+        const err = await res.json().catch(() => null);
+        const msg = err?.message || `Login failed (${res.status})`;
+        throw new Error(msg);
+      }
+
+      const { user, tokens } = (await res.json()) as {
+        user: User;
+        tokens: Tokens;
+      };
+
+      // persist
+      saveSession(user, tokens);
+
+      // infer admin from role (your payload has role:"user")
+      setIsAdmin(user.email === "kaleb@kaleb.com");
+
+      setMessage("Login successful");
       router.push("/");
-      console.log("User Data:", data);
+    } catch (e: unknown) {
+      const errorMessage =
+        e && typeof e === "object" && "message" in e
+          ? (e as { message?: string }).message
+          : undefined;
+      setMessage(`Error: ${errorMessage || "Unable to login"}`);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      const refreshToken = getRefreshToken();
+      if (refreshToken) {
+        await rawFetch("/v1/auth/logout", {
+          method: "POST",
+          body: JSON.stringify({ refreshToken }),
+        });
+      }
+    } catch {
+      // swallow network errors on logout
+    } finally {
+      clearSession();
+      setIsAdmin(false);
+      setMessage("Logged out");
     }
   };
 
@@ -36,7 +77,7 @@ export default function Login({ isAdmin, setIsAdmin }: LoginProps) {
     return (
       <div className="container">
         <h1>Already Logged In</h1>
-        <button className="mainButton" onClick={() => setIsAdmin(false)}>
+        <button className="mainButton" onClick={() => handleLogout()}>
           Logout
         </button>
       </div>

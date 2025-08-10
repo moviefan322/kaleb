@@ -119,12 +119,13 @@ export default function DayScheduler({ selectedDate }: Props) {
     if (!selectedSlot) return;
     if (!formState.name || !formState.email || !formState.phone) return;
 
-    setFormState({ ...formState, submitting: true });
+    setFormState((s) => ({ ...s, submitting: true }));
     try {
       const startISO = selectedSlot.toISOString();
       const endISO = new Date(
         selectedSlot.getTime() + formState.durationMinutes * 60 * 1000
       ).toISOString();
+
       await createBooking({
         start_time: startISO,
         end_time: endISO,
@@ -133,10 +134,11 @@ export default function DayScheduler({ selectedDate }: Props) {
         phone: formState.phone,
         notes: formState.notes,
       });
-      // refresh
+
       const updated = await fetchBookingsByDate();
       setBookings(updated);
-      // reset form
+
+      // reset everything
       setFormState({
         name: "",
         email: "",
@@ -148,8 +150,10 @@ export default function DayScheduler({ selectedDate }: Props) {
         durationMinutes: 30,
       });
       setSelectedSlot(null);
-    } finally {
-      setFormState({ ...formState, submitting: false });
+    } catch (err) {
+      // optional: toast
+      console.error("Booking failed:", err);
+      setFormState((s) => ({ ...s, submitting: false }));
     }
   };
 
