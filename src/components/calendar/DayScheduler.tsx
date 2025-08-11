@@ -1,23 +1,21 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect, useCallback } from "react";
+import { Booking } from "@/types/booking";
+import { validateEmail, validatePhone } from "@/lib/validate";
 
 // DayScheduler.tsx
 type Props = {
   selectedDate: Date;
 };
 
-interface Booking {
-  id: string;
-  start_time: string;
-  end_time: string;
-  name: string;
-  email: string;
-  phone: string;
-  notes?: string;
-}
-
 export default function DayScheduler({ selectedDate }: Props) {
   const [selectedSlot, setSelectedSlot] = useState<Date | null>(null);
   const [bookings, setBookings] = useState<Booking[]>([]);
+  const [errors, setErrors] = useState<{
+    name?: string;
+    email?: string;
+    phone?: string;
+  }>({});
   const [formState, setFormState] = useState({
     name: "",
     email: "",
@@ -25,9 +23,78 @@ export default function DayScheduler({ selectedDate }: Props) {
     notes: "",
     start_time: "",
     end_time: "",
+    type: "Thai Massage",
     submitting: false,
     durationMinutes: 30,
   });
+
+  const durationOptions = [30, 60, 90];
+
+  const isDurationAllowed = (slot: Date | null, minutes: number) => {
+    if (!slot) return true; // no slot picked yet → allow choosing freely
+    return !conflictsWithBuffer(slot, minutes, 15);
+  };
+
+  useEffect(() => {
+    if (!selectedSlot) return;
+    const allowed = durationOptions.filter((m) =>
+      isDurationAllowed(selectedSlot, m)
+    );
+    if (allowed.length === 0) {
+      // no duration fits this slot anymore → unselect
+      setSelectedSlot(null);
+      return;
+    }
+    if (!allowed.includes(formState.durationMinutes)) {
+      setFormState((s) => ({ ...s, durationMinutes: allowed[0] }));
+    }
+  }, [
+    selectedSlot,
+    bookings,
+    durationOptions,
+    formState.durationMinutes,
+    isDurationAllowed,
+  ]); // re-evaluate when slot or bookings change
+
+  const validateForm = () => {
+    const e: typeof errors = {};
+    if (!formState.name.trim()) e.name = "Name is required";
+    if (!validateEmail(formState.email)) e.email = "Enter a valid email";
+    if (!validatePhone(formState.phone)) e.phone = "Enter a valid phone number";
+    setErrors(e);
+    return Object.keys(e).length === 0;
+  };
+
+  const onBlurField = (field: "name" | "email" | "phone") => {
+    setErrors((prev) => {
+      const copy = { ...prev };
+      if (field === "name" && !formState.name.trim())
+        copy.name = "Name is required";
+      if (field === "email" && !validateEmail(formState.email))
+        copy.email = "Enter a valid email";
+      if (field === "phone" && !validatePhone(formState.phone))
+        copy.phone = "Enter a valid phone number";
+      return copy;
+    });
+  };
+
+  // 15-minute buffer on BOTH sides of existing bookings
+  const conflictsWithBuffer = (
+    start: Date,
+    durationMin: number,
+    bufferMin = 15
+  ) => {
+    const startMs = start.getTime();
+    const endMs = startMs + durationMin * 60_000;
+    const pad = bufferMin * 60_000;
+
+    return bookings.some((b) => {
+      const s = new Date(b.start_time).getTime() - pad; // extend earlier
+      const e = new Date(b.end_time).getTime() + pad; // extend later
+      // overlap between [startMs, endMs] and [s, e]
+      return s < endMs && e > startMs;
+    });
+  };
 
   const isoAt = useCallback((base: Date, h: number, m: number) => {
     const d = new Date(base);
@@ -44,6 +111,7 @@ export default function DayScheduler({ selectedDate }: Props) {
         name: "Alice Smith",
         email: "alice@example.com",
         phone: "+1 (555) 123-4567",
+        type: "Thai Massage",
       },
       {
         id: "2",
@@ -52,6 +120,7 @@ export default function DayScheduler({ selectedDate }: Props) {
         name: "Bob Jones",
         email: "bob@example.com",
         phone: "555-678-9012",
+        type: "Cupping",
       },
     ];
     return Promise.resolve(MOCK);
@@ -85,14 +154,8 @@ export default function DayScheduler({ selectedDate }: Props) {
     return slots;
   };
 
-  const isBooked = (slot: Date): boolean => {
-    return bookings.some((b) => {
-      const start = new Date(b.start_time).getTime();
-      const end = new Date(b.end_time).getTime();
-      const t = slot.getTime();
-      return start <= t && t < end; // slot starts within a booking
-    });
-  };
+  const isBlockedSlot = (slot: Date) =>
+    conflictsWithBuffer(slot, formState.durationMinutes, 30);
 
   const formatTime = (date: Date): string => {
     return date.toLocaleTimeString("en-US", {
@@ -110,7 +173,7 @@ export default function DayScheduler({ selectedDate }: Props) {
   };
 
   const handleSlotClick = (slot: Date) => {
-    if (isBooked(slot)) return;
+    if (conflictsWithBuffer(slot, formState.durationMinutes)) return;
     setSelectedSlot(slot);
   };
 
@@ -119,12 +182,35 @@ export default function DayScheduler({ selectedDate }: Props) {
     if (!selectedSlot) return;
     if (!formState.name || !formState.email || !formState.phone) return;
 
+    // 🚨 buffer/overlap check before booking
+    if (conflictsWithBuffer(selectedSlot, formState.durationMinutes)) {
+      alert(
+        "That time is too close to another booking. Please pick a different slot."
+      );
+      return; // stop here
+    }
+
+    if (!isDurationAllowed(selectedSlot, formState.durationMinutes)) {
+      alert("Selected duration is no longer available for this time.");
+      return;
+    }
+
     setFormState((s) => ({ ...s, submitting: true }));
     try {
       const startISO = selectedSlot.toISOString();
       const endISO = new Date(
         selectedSlot.getTime() + formState.durationMinutes * 60 * 1000
       ).toISOString();
+
+      console.log("Creating booking:", {
+        start_time: startISO,
+        end_time: endISO,
+        name: formState.name,
+        email: formState.email,
+        phone: formState.phone,
+        notes: formState.notes,
+        type: formState.type,
+      });
 
       await createBooking({
         start_time: startISO,
@@ -133,12 +219,13 @@ export default function DayScheduler({ selectedDate }: Props) {
         email: formState.email,
         phone: formState.phone,
         notes: formState.notes,
+        type: formState.type,
       });
 
       const updated = await fetchBookingsByDate();
       setBookings(updated);
 
-      // reset everything
+      // reset form
       setFormState({
         name: "",
         email: "",
@@ -146,12 +233,12 @@ export default function DayScheduler({ selectedDate }: Props) {
         notes: "",
         start_time: "",
         end_time: "",
+        type: "Thai Massage",
         submitting: false,
         durationMinutes: 30,
       });
       setSelectedSlot(null);
     } catch (err) {
-      // optional: toast
       console.error("Booking failed:", err);
       setFormState((s) => ({ ...s, submitting: false }));
     }
@@ -165,7 +252,15 @@ export default function DayScheduler({ selectedDate }: Props) {
   return (
     <div className="day-scheduler-container">
       {selectedSlot ? (
-        <form className="booking-form" onSubmit={handleSubmit}>
+        <form
+          className="booking-form"
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (!selectedSlot) return;
+            if (!validateForm()) return;
+            handleSubmit(e);
+          }}
+        >
           <div className="form-header">
             <strong>Booking:</strong> {formatTime(selectedSlot)} –{" "}
             {formatTime(
@@ -174,6 +269,26 @@ export default function DayScheduler({ selectedDate }: Props) {
               )
             )}
           </div>
+          <label>
+            Type
+            <select
+              value={formState.type}
+              onChange={(e) =>
+                setFormState({
+                  ...formState,
+                  type: e.target.value,
+                })
+              }
+              required
+            >
+              <option value={"Thai Massage"}>Thai Massage</option>
+              <option value={"Cupping/Acupressure"}>
+                Cupping + Acupressure
+              </option>
+              <option value={"Private Yoga"}>Private Yoga Session</option>
+              <option value={"Other"}>{`Other (specify in notes)`}</option>
+            </select>
+          </label>
           <label>
             Duration
             <select
@@ -186,41 +301,59 @@ export default function DayScheduler({ selectedDate }: Props) {
               }
               required
             >
-              <option value={30}>30 minutes</option>
-              <option value={60}>60 minutes</option>
-              <option value={90}>90 minutes</option>
+              {durationOptions.map((min) => {
+                const disabled = !isDurationAllowed(selectedSlot, min);
+                return (
+                  <option key={min} value={min} disabled={disabled}>
+                    {min} minutes{disabled ? " (unavailable)" : ""}
+                  </option>
+                );
+              })}
             </select>
           </label>
+
           <label>
             Name
             <input
               value={formState.name}
-              onChange={(e) =>
-                setFormState({ ...formState, name: e.target.value })
-              }
+              onBlur={() => onBlurField("name")}
+              onChange={(e) => {
+                setFormState({ ...formState, name: e.target.value });
+                if (errors.name) setErrors({ ...errors, name: undefined });
+              }}
               required
+              className={errors.name ? "invalid" : ""}
             />
+            {errors.name && <span className="err">{errors.name}</span>}
           </label>
           <label>
             Email
             <input
               type="email"
               value={formState.email}
-              onChange={(e) =>
-                setFormState({ ...formState, email: e.target.value })
-              }
+              onBlur={() => onBlurField("email")}
+              onChange={(e) => {
+                setFormState({ ...formState, email: e.target.value });
+                if (errors.email) setErrors({ ...errors, email: undefined });
+              }}
               required
+              className={errors.email ? "invalid" : ""}
             />
+            {errors.email && <span className="err">{errors.email}</span>}
           </label>
           <label>
             Phone
             <input
               value={formState.phone}
-              onChange={(e) =>
-                setFormState({ ...formState, phone: e.target.value })
-              }
+              onBlur={() => onBlurField("phone")}
+              onChange={(e) => {
+                setFormState({ ...formState, phone: e.target.value });
+                if (errors.phone) setErrors({ ...errors, phone: undefined });
+              }}
               required
+              className={errors.phone ? "invalid" : ""}
             />
+            {errors.phone && <span className="err">{errors.phone}</span>}
           </label>
           <label>
             Notes (optional)
@@ -242,7 +375,10 @@ export default function DayScheduler({ selectedDate }: Props) {
                 formState.submitting ||
                 !formState.name ||
                 !formState.email ||
-                !formState.phone
+                !formState.phone ||
+                !!errors.name ||
+                !!errors.email ||
+                !!errors.phone
               }
             >
               {formState.submitting ? "Saving..." : "Confirm Booking"}
@@ -256,7 +392,7 @@ export default function DayScheduler({ selectedDate }: Props) {
           </div>
           <ul className="time-slot-list">
             {slots.map((slot, idx) => {
-              const booked = isBooked(slot);
+              const booked = isBlockedSlot(slot);
               const isSelected =
                 selectedMs !== null && selectedMs === slot.getTime();
 
@@ -279,6 +415,14 @@ export default function DayScheduler({ selectedDate }: Props) {
 
       {/* Styles */}
       <style jsx>{`
+        .err {
+          color: #b00020;
+          font-size: 12px;
+        }
+        input.invalid {
+          border-color: #b00020;
+          outline-color: #b00020;
+        }
         .day-scheduler-container {
           padding: 10px;
           width: 300px;
