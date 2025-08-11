@@ -1,5 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { Booking } from "@/types/booking";
 import { validateEmail, validatePhone } from "@/lib/validate";
 
@@ -7,6 +6,8 @@ import { validateEmail, validatePhone } from "@/lib/validate";
 type Props = {
   selectedDate: Date;
 };
+
+const durationOptions = [30, 60, 90];
 
 export default function DayScheduler({ selectedDate }: Props) {
   const [selectedSlot, setSelectedSlot] = useState<Date | null>(null);
@@ -28,12 +29,26 @@ export default function DayScheduler({ selectedDate }: Props) {
     durationMinutes: 30,
   });
 
-  const durationOptions = [30, 60, 90];
+  const conflictsWithBuffer = useCallback(
+    (start: Date, durationMin: number, bufferMin = 15) => {
+      const startMs = start.getTime();
+      const endMs = startMs + durationMin * 60_000;
+      const pad = bufferMin * 60_000;
 
-  const isDurationAllowed = (slot: Date | null, minutes: number) => {
-    if (!slot) return true; // no slot picked yet → allow choosing freely
-    return !conflictsWithBuffer(slot, minutes, 15);
-  };
+      return bookings.some((b) => {
+        const s = new Date(b.start_time).getTime() - pad;
+        const e = new Date(b.end_time).getTime() + pad;
+        return s < endMs && e > startMs;
+      });
+    },
+    [bookings]
+  );
+
+  const isDurationAllowed = useCallback(
+    (slot: Date | null, minutes: number) =>
+      !slot ? true : !conflictsWithBuffer(slot, minutes, 15),
+    [conflictsWithBuffer]
+  );
 
   useEffect(() => {
     if (!selectedSlot) return;
@@ -41,20 +56,13 @@ export default function DayScheduler({ selectedDate }: Props) {
       isDurationAllowed(selectedSlot, m)
     );
     if (allowed.length === 0) {
-      // no duration fits this slot anymore → unselect
       setSelectedSlot(null);
       return;
     }
     if (!allowed.includes(formState.durationMinutes)) {
       setFormState((s) => ({ ...s, durationMinutes: allowed[0] }));
     }
-  }, [
-    selectedSlot,
-    bookings,
-    durationOptions,
-    formState.durationMinutes,
-    isDurationAllowed,
-  ]); // re-evaluate when slot or bookings change
+  }, [selectedSlot, bookings, formState.durationMinutes, isDurationAllowed]);
 
   const validateForm = () => {
     const e: typeof errors = {};
@@ -75,24 +83,6 @@ export default function DayScheduler({ selectedDate }: Props) {
       if (field === "phone" && !validatePhone(formState.phone))
         copy.phone = "Enter a valid phone number";
       return copy;
-    });
-  };
-
-  // 15-minute buffer on BOTH sides of existing bookings
-  const conflictsWithBuffer = (
-    start: Date,
-    durationMin: number,
-    bufferMin = 15
-  ) => {
-    const startMs = start.getTime();
-    const endMs = startMs + durationMin * 60_000;
-    const pad = bufferMin * 60_000;
-
-    return bookings.some((b) => {
-      const s = new Date(b.start_time).getTime() - pad; // extend earlier
-      const e = new Date(b.end_time).getTime() + pad; // extend later
-      // overlap between [startMs, endMs] and [s, e]
-      return s < endMs && e > startMs;
     });
   };
 
@@ -142,20 +132,26 @@ export default function DayScheduler({ selectedDate }: Props) {
     loadBookings();
   }, [selectedDate, fetchBookingsByDate]);
 
-  const generateTimeSlots = (): Date[] => {
-    const slots: Date[] = [];
+  function generateTimeSlots(base: Date): Date[] {
+    const out: Date[] = [];
     for (let hour = 7; hour <= 17; hour++) {
       for (let half = 0; half < 60; half += 30) {
-        const d = new Date(selectedDate);
-        d.setHours(hour, half, 0, 0); // zero secs/ms
-        slots.push(d);
+        const d = new Date(base);
+        d.setHours(hour, half, 0, 0);
+        out.push(d);
       }
     }
-    return slots;
-  };
+    return out;
+  }
+
+  // normalize the dep to a number so memo doesn’t get confused
+  const selectedKey = useMemo(
+    () => new Date(selectedDate).getTime(),
+    [selectedDate]
+  );
 
   const isBlockedSlot = (slot: Date) =>
-    conflictsWithBuffer(slot, formState.durationMinutes, 30);
+    conflictsWithBuffer(slot, formState.durationMinutes, 15);
 
   const formatTime = (date: Date): string => {
     return date.toLocaleTimeString("en-US", {
@@ -244,7 +240,11 @@ export default function DayScheduler({ selectedDate }: Props) {
     }
   };
 
-  const slots: Date[] = generateTimeSlots();
+  const slots = useMemo(
+    () => generateTimeSlots(new Date(selectedKey)),
+    [selectedKey]
+  );
+
   const selectedMs: number | null = selectedSlot
     ? selectedSlot.getTime()
     : null;
