@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { Booking } from "@/types/booking";
 import { validateEmail, validatePhone } from "@/lib/validate";
+import { isAdmin } from "@/lib/session";
 
 // DayScheduler.tsx
 type Props = {
@@ -12,6 +13,7 @@ const durationOptions = [30, 60, 90];
 export default function DayScheduler({ selectedDate }: Props) {
   const [selectedSlot, setSelectedSlot] = useState<Date | null>(null);
   const [bookings, setBookings] = useState<Booking[]>([]);
+  const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
   const [errors, setErrors] = useState<{
     name?: string;
     email?: string;
@@ -153,6 +155,32 @@ export default function DayScheduler({ selectedDate }: Props) {
   const isBlockedSlot = (slot: Date) =>
     conflictsWithBuffer(slot, formState.durationMinutes, 15);
 
+  const isTrulyBooked = useCallback(
+    (slot: Date) => {
+      const t = slot.getTime();
+      return bookings.some((b) => {
+        const s = new Date(b.start_time).getTime();
+        const e = new Date(b.end_time).getTime();
+        return s <= t && t < e;
+      });
+    },
+    [bookings]
+  );
+
+  const findBookingAt = useCallback(
+    (slot: Date): Booking | null => {
+      const t = slot.getTime();
+      return (
+        bookings.find((b) => {
+          const s = new Date(b.start_time).getTime();
+          const e = new Date(b.end_time).getTime();
+          return s <= t && t < e;
+        }) || null
+      );
+    },
+    [bookings]
+  );
+
   const formatTime = (date: Date): string => {
     return date.toLocaleTimeString("en-US", {
       hour: "numeric",
@@ -169,7 +197,18 @@ export default function DayScheduler({ selectedDate }: Props) {
   };
 
   const handleSlotClick = (slot: Date) => {
-    if (conflictsWithBuffer(slot, formState.durationMinutes)) return;
+    // block buffer/overlap for new bookings
+    if (conflictsWithBuffer(slot, formState.durationMinutes)) {
+      // but allow admins to click through to details if it's a real booking
+      if (isAdmin() && isTrulyBooked(slot)) {
+        const b = findBookingAt(slot);
+        if (b) setSelectedBooking(b);
+      }
+      return;
+    }
+
+    // free slot → regular selection flow
+    setSelectedBooking(null);
     setSelectedSlot(slot);
   };
 
@@ -251,7 +290,7 @@ export default function DayScheduler({ selectedDate }: Props) {
 
   return (
     <div className="day-scheduler-container">
-      {selectedSlot ? (
+      {selectedSlot && (
         <form
           className="booking-form"
           onSubmit={(e) => {
@@ -385,34 +424,121 @@ export default function DayScheduler({ selectedDate }: Props) {
             </button>
           </div>
         </form>
-      ) : (
+      )}{" "}
+      {!selectedSlot && !selectedBooking && (
         <>
           <div className="day-header">
             <h3>{formatDate(selectedDate)}</h3>
           </div>
+
           <ul className="time-slot-list">
             {slots.map((slot, idx) => {
-              const booked = isBlockedSlot(slot);
+              const blocked = isBlockedSlot(slot); // buffer + booking
+              const trulyBooked = isTrulyBooked(slot); // actual booking only
+              const admin = isAdmin();
               const isSelected =
                 selectedMs !== null && selectedMs === slot.getTime();
+
+              // Admin can click *booked* (not buffer) for details. Everyone can click free.
+              const canClick = admin ? trulyBooked || !blocked : !blocked;
+
+              const onClick = () => {
+                // Debug to verify the branch we’re taking:
+                console.log("slot click", {
+                  time: slot.toISOString(),
+                  admin,
+                  blocked,
+                  trulyBooked,
+                  canClick,
+                });
+
+                if (!canClick) return;
+
+                if (admin && trulyBooked) {
+                  const b = findBookingAt(slot);
+                  if (b) {
+                    setSelectedSlot(null); // ensure form view stays closed
+                    setSelectedBooking(b); // show details panel
+                  }
+                  return;
+                }
+
+                // Free slot → normal booking selection
+                setSelectedBooking(null);
+                handleSlotClick(slot);
+              };
 
               return (
                 <li
                   key={idx}
-                  className={`time-slot${booked ? " booked" : ""}${
+                  className={`time-slot${blocked ? " booked" : ""}${
                     isSelected ? " selected" : ""
                   }`}
-                  onClick={() => handleSlotClick(slot)}
                 >
-                  {formatTime(slot)}
-                  {booked && <span className="pill">Booked</span>}
+                  <button
+                    type="button"
+                    className="slot-btn"
+                    onClick={onClick}
+                    // IMPORTANT: do NOT disable when admin+booked, or clicks won’t fire
+                    disabled={!canClick}
+                    title={
+                      blocked
+                        ? trulyBooked
+                          ? admin
+                            ? "View booking details"
+                            : "Booked"
+                          : "Buffer time"
+                        : "Available"
+                    }
+                  >
+                    <span>{formatTime(slot)}</span>
+                    {blocked && (
+                      <span className="pill">
+                        {trulyBooked ? "Booked" : "Buffer"}
+                      </span>
+                    )}
+                  </button>
                 </li>
               );
             })}
           </ul>
         </>
       )}
-
+      {isAdmin() && selectedBooking && (
+        <div className="booking-detail">
+          <div className="bd-row">
+            <strong>{selectedBooking.name}</strong>
+            <button
+              type="button"
+              className="bd-close"
+              onClick={() => setSelectedBooking(null)}
+            >
+              Close
+            </button>
+          </div>
+          <div className="bd-grid">
+            <div>
+              <span>Type:</span> {selectedBooking.type}
+            </div>
+            <div>
+              <span>Email:</span> {selectedBooking.email}
+            </div>
+            <div>
+              <span>Phone:</span> {selectedBooking.phone}
+            </div>
+            <div>
+              <span>Time:</span>{" "}
+              {formatTime(new Date(selectedBooking.start_time))} –{" "}
+              {formatTime(new Date(selectedBooking.end_time))}
+            </div>
+            {selectedBooking.notes && (
+              <div className="bd-notes">
+                <span>Notes:</span> {selectedBooking.notes}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
       {/* Styles */}
       <style jsx>{`
         .err {
@@ -505,6 +631,21 @@ export default function DayScheduler({ selectedDate }: Props) {
         .booking-form button[disabled] {
           opacity: 0.6;
           cursor: not-allowed;
+        }
+        .slot-btn {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          width: 100%;
+          border: 0;
+          background: transparent;
+          padding: 0; /* li already has padding */
+          text-align: left;
+          cursor: pointer;
+        }
+        .slot-btn:disabled {
+          cursor: not-allowed;
+          pointer-events: none;
         }
       `}</style>
     </div>

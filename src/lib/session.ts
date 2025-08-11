@@ -49,3 +49,11 @@ export function getStoredUser(): User | null {
     return null;
   }
 }
+
+export function isAdmin(): boolean {
+  const user = getStoredUser();
+  if (user && user.email === "kaleb@kaleb.com") {
+    return true;
+  }
+  return false;
+}
