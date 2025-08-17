@@ -468,6 +468,8 @@ export default function DayScheduler({ selectedDate }: Props) {
                 handleSlotClick(slot);
               };
 
+              // if(blocked && !admin) return
+
               return (
                 <li
                   key={idx}
@@ -477,7 +479,7 @@ export default function DayScheduler({ selectedDate }: Props) {
                 >
                   <button
                     type="button"
-                    className="slot-btn"
+                    className={"slot-btn"}
                     onClick={onClick}
                     // IMPORTANT: do NOT disable when admin+booked, or clicks won’t fire
                     disabled={!canClick}
