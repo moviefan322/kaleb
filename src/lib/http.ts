@@ -8,7 +8,7 @@ export const API_BASE_LOCAL =
   "https://localhost:3001";
 
 export async function rawFetch(path: string, init: RequestInit = {}) {
-  const res = await fetch(`${API_BASE_LOCAL}${path}`, {
+  const res = await fetch(`${API_BASE}${path}`, {
     headers: { "Content-Type": "application/json", ...(init.headers || {}) },
     ...init,
   });
