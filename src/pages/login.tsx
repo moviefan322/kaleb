@@ -59,7 +59,7 @@ export default function Login({ isAdmin, setIsAdmin }: LoginProps) {
     try {
       const refreshToken = getRefreshToken();
       if (refreshToken) {
-        await rawFetch("/v1/auth/logout", {
+        await rawFetch("/auth/logout", {
           method: "POST",
           body: JSON.stringify({ refreshToken }),
         });
