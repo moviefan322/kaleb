@@ -21,7 +21,7 @@ export default function Login({ isAdmin, setIsAdmin }: LoginProps) {
   const handleLogin = async () => {
     setMessage("");
     try {
-      const res = await rawFetch("/v1/auth/login", {
+      const res = await rawFetch("/auth/login", {
         method: "POST",
         body: JSON.stringify({ email, password }),
       });
