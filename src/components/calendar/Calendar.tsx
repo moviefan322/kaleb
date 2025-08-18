@@ -45,6 +45,17 @@ export default function Calendar() {
           border-radius: 5px;
           margin-bottom: 20px;
         }
+
+        // media queries for responsiveness
+        @media (max-width: 768px) {
+          .calendar-container {
+            flex-direction: column;
+            align-items: center;
+          }
+          .admin-banner {
+            margin-bottom: 10px;
+          }
+        }
       `}</style>
     </>
   );
