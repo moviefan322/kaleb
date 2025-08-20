@@ -99,6 +99,31 @@ export async function createBooking(
   }
 }
 
+export async function markAsUnavailable(time: Date | string): Promise<Booking> {
+  const start = new Date(time);
+  if (Number.isNaN(start.getTime())) {
+    throw new Error("Invalid time for unavailable slot");
+  }
+
+  const startISO = start.toISOString();
+  const end = new Date(start.getTime() + (29 * 60 + 59) * 1000);
+  const endISO = end.toISOString();
+
+  try {
+    const data = await apiPost<Booking>("/bookings", {
+      name: "n/a",
+      email: "unavailable@unavailable.com",
+      phone: "212-555-5555",
+      type: "unavailable",
+      start_time: startISO,
+      end_time: endISO,
+    });
+    return data;
+  } catch (e) {
+    throw new Error(msgFromAxios(e, "Mark as unavailable failed"));
+  }
+}
+
 // --- UPDATE (admin) ---
 export type UpdateBookingInput = Partial<CreateBookingInput>;
 
