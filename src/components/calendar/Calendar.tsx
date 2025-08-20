@@ -32,7 +32,6 @@ export default function Calendar() {
           flex-direction: row;
           gap: 20px;
           padding: 20px;
-          border: 1px solid #ccc;
           border-radius: 8px;
           margin: auto;
         }

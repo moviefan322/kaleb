@@ -103,6 +103,7 @@ export default function WeekSelector({
           min-width: 250px;
           max-width: 300px;
           background-color: #f9f9f9;
+          width: 100%;
         }
         ul {
           list-style: none;
