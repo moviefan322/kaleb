@@ -9,11 +9,15 @@ import { BookingForm } from "./BookingForm";
 // DayScheduler.tsx
 type Props = {
   selectedDate: Date;
+  refreshUnconfirmedBookings: () => void;
 };
 
 const durationOptions = [30, 60, 90];
 
-export default function DayScheduler({ selectedDate }: Props) {
+export default function DayScheduler({
+  selectedDate,
+  refreshUnconfirmedBookings,
+}: Props) {
   const [selectedSlot, setSelectedSlot] = useState<Date | null>(null);
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
@@ -81,7 +85,7 @@ export default function DayScheduler({ selectedDate }: Props) {
     });
 
     // Filter to only include objects with Booking properties
-    return results.filter(
+    const allBookings = results.filter(
       (b): b is Booking =>
         b &&
         typeof b === "object" &&
@@ -92,12 +96,24 @@ export default function DayScheduler({ selectedDate }: Props) {
         typeof (b as { email?: unknown }).email === "string" &&
         typeof (b as { phone?: unknown }).phone === "string"
     );
+
+    console.log("Fetched bookings:", allBookings);
+
+    if (isAdmin()) {
+      return allBookings;
+    } else {
+      // For non-admins, filter out unavailable and unconfirmed bookings
+      return allBookings.filter((b) => b.type !== "unavailable");
+    }
   }, [selectedDate]);
 
   const refreshBookings = useCallback(async () => {
     const data = await fetchBookingsByDate();
     setBookings(data);
-  }, [fetchBookingsByDate]);
+    if (refreshUnconfirmedBookings) {
+      await refreshUnconfirmedBookings();
+    }
+  }, [fetchBookingsByDate, refreshUnconfirmedBookings]);
 
   useEffect(() => {
     const loadBookings = async () => {

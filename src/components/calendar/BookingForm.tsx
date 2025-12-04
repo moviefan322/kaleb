@@ -238,7 +238,7 @@ export const BookingForm = ({
               !!errors.phone
             }
           >
-            {formState.submitting ? "Saving..." : "Confirm Booking"}
+            {formState.submitting ? "Saving..." : "Request Booking"}
           </button>
         </div>
       </form>

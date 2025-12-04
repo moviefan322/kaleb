@@ -51,6 +51,8 @@ export const SlotsView = ({
     return out;
   }
 
+  console.log("bookings from slot  view:", bookings);
+
   const selectedKey = useMemo(
     () => new Date(selectedDate).getTime(),
     [selectedDate]
@@ -134,7 +136,19 @@ export const SlotsView = ({
             selectedMs !== null && selectedMs === slot.getTime();
 
           // Admin can click *booked* (not buffer) for details. Everyone can click free.
-          const canClick = admin ? trulyBooked || !blocked : !blocked;
+          const isPending =
+            admin && trulyBooked && findBookingAt(slot)?.confirmed === false;
+          const canClick = isPending
+            ? true
+            : admin
+            ? trulyBooked || !blocked
+            : !blocked;
+
+          // Remove 'booked' class for pending slots so background is not gray/disabled
+          // Also, never show 'booked' class for admins so cursor is always pointer
+          const liClass = `time-slot${
+            !admin && (blocked || isUnavailable) && !isPending ? " booked" : ""
+          }${isSelected ? " selected" : ""}`;
 
           const onClick = () => {
             // Debug to verify the branch we’re taking:
@@ -162,37 +176,36 @@ export const SlotsView = ({
             handleSlotClick(slot);
           };
 
-          if (blocked || isUnavailable && !admin) return;
+          if ((blocked && !trulyBooked) || (isUnavailable && !admin)) return;
 
           return (
-            <li
-              key={idx}
-              className={`time-slot${blocked || isUnavailable ? " booked" : ""}${
-                isSelected ? " selected" : ""
-              }`}
-            >
+            <li key={idx} className={liClass}>
               <button
                 type="button"
                 className={"slot-btn"}
                 onClick={onClick}
-                // IMPORTANT: do NOT disable when admin+booked, or clicks won’t fire
-                disabled={!canClick || isUnavailable}
+                disabled={(!canClick && !admin) || (isUnavailable && !admin)}
+                style={{ cursor: admin ? "pointer" : undefined }}
                 title={
                   blocked
                     ? trulyBooked
                       ? admin
                         ? "View booking details"
+                        : findBookingAt(slot)?.confirmed === false
+                        ? "Pending"
                         : "Booked"
                       : "Buffer time"
                     : "Available"
                 }
               >
                 <span>{formatTime(slot)}</span>
-                {blocked && (
-                  <span className="pill">
-                    {trulyBooked ? "Booked" : "Buffer"}
-                  </span>
-                )}
+                {blocked &&
+                  (trulyBooked &&
+                  findBookingAt(slot)?.confirmed === false ? null : !admin ? (
+                    <span className="pill client-booked-pill">Booked</span>
+                  ) : (
+                    <span className="pill booked-pill blue-pill">Booked</span>
+                  ))}
               </button>
               {admin && !blocked && !trulyBooked && (
                 <button
@@ -210,6 +223,36 @@ export const SlotsView = ({
                   Block
                 </button>
               )}
+              {admin &&
+                trulyBooked &&
+                findBookingAt(slot)?.confirmed === false && (
+                  <button
+                    type="button"
+                    className={`mark-unavailable-btn pending-pill`}
+                    style={{
+                      background: "#ffa726",
+                      color: "white",
+                      borderRadius: "6px",
+                      padding: "4px 8px",
+                      cursor: "pointer",
+                    }}
+                    onClick={() => {
+                      const b = findBookingAt(slot);
+                      if (b) {
+                        setSelectedSlot(null);
+                        setSelectedBooking(b);
+                      }
+                    }}
+                  >
+                    Pending
+                  </button>
+                )}
+              {admin &&
+                trulyBooked &&
+                findBookingAt(slot)?.confirmed !== false &&
+                !blocked && (
+                  <span className="pill booked-pill blue-pill">Booked</span>
+                )}
               {trulyBooked && admin && isUnavailableAt(slot) && (
                 <button
                   type="button"
@@ -278,6 +321,18 @@ export const SlotsView = ({
           border-radius: 999px;
           background: #ddd;
         }
+        .client-booked-pill {
+          background: #ddd;
+          color: #555;
+        }
+        .booked-pill {
+          background: #ff5252;
+          color: white;
+        }
+        .pending-pill {
+          background: #ffa726;
+          color: white;
+        }
         .slot-btn {
           display: flex;
           align-items: center;
@@ -316,6 +371,14 @@ export const SlotsView = ({
         }
         .mark-available-btn:hover {
           background: #388e3c;
+        }
+        .blue-pill {
+          background: #1976d2;
+          color: white;
+          font-weight: bold;
+          border-radius: 6px;
+          padding: 4px 8px;
+          margin-left: 8px;
         }
       `}</style>
     </>

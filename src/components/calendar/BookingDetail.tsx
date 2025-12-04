@@ -1,6 +1,7 @@
 import { formatTime } from "@/util/";
-import { deleteBooking } from "@/lib/booking";
+import { deleteBooking, confirmBooking, rejectBooking } from "@/lib/booking";
 import type { Booking } from "@/types/booking";
+import { useState } from "react";
 
 interface BookingDetailProps {
   selectedBooking: Booking;
@@ -13,10 +14,27 @@ export const BookingDetail = ({
   setSelectedBooking,
   refreshBookings,
 }: BookingDetailProps) => {
-  const handleDeleteBooking = async (id: string) => {
-    if (!window.confirm("Are you sure you want to delete this booking?"))
-      return;
+  const [showRejectInput, setShowRejectInput] = useState(false);
+  const [rejectMessage, setRejectMessage] = useState("");
 
+  const handleConfirmBooking = async (id: string) => {
+    try {
+      await confirmBooking(id);
+      refreshBookings();
+      setSelectedBooking(null);
+    } catch (err) {
+      console.error("Confirm booking failed:", err);
+      alert("Failed to confirm booking. Please try again.");
+    }
+  };
+
+  const handleDeleteBooking = async (id: string) => {
+    if (
+      !window.confirm(
+        "Are you sure you want to delete this booking? Client will not be notified, please contact them!"
+      )
+    )
+      return;
     try {
       await deleteBooking(id);
       refreshBookings();
@@ -24,6 +42,17 @@ export const BookingDetail = ({
     } catch (err) {
       console.error("Delete booking failed:", err);
       alert("Failed to delete booking. Please try again.");
+    }
+  };
+
+  const handleRejectBooking = async (id: string, message: string) => {
+    try {
+      await rejectBooking(id, message);
+      refreshBookings();
+      setSelectedBooking(null);
+    } catch (err) {
+      console.error("Reject booking failed:", err);
+      alert("Failed to reject booking. Please try again.");
     }
   };
 
@@ -61,12 +90,73 @@ export const BookingDetail = ({
             </div>
           )}
         </div>
-        <button
-          className="deleteButton"
-          onClick={() => handleDeleteBooking(selectedBooking.id)}
-        >
-          Delete Booking
-        </button>
+        {selectedBooking.confirmed === false ? (
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "12px",
+              marginTop: "12px",
+            }}
+          >
+            {!showRejectInput ? (
+              <div style={{ display: "flex", gap: "12px" }}>
+                <button
+                  className="deleteButton confirmButton"
+                  onClick={() => handleConfirmBooking(selectedBooking.id)}
+                >
+                  Confirm
+                </button>
+                <button
+                  className="deleteButton rejectButton"
+                  onClick={() => setShowRejectInput(true)}
+                >
+                  Reject
+                </button>
+              </div>
+            ) : (
+              <>
+                <textarea
+                  placeholder="Optional message to client"
+                  value={rejectMessage}
+                  onChange={(e) => setRejectMessage(e.target.value)}
+                  rows={10}
+                  style={{
+                    marginBottom: "8px",
+                    padding: "6px",
+                    borderRadius: "4px",
+                    border: "1px solid #ccc",
+                    width: "100%",
+                    resize: "vertical",
+                  }}
+                />
+                <div style={{ display: "flex", gap: "12px" }}>
+                  <button
+                    className="deleteButton rejectButton"
+                    onClick={() =>
+                      handleRejectBooking(selectedBooking.id, rejectMessage)
+                    }
+                  >
+                    Reject
+                  </button>
+                  <button
+                    className="deleteButton"
+                    onClick={() => setShowRejectInput(false)}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        ) : (
+          <button
+            className="deleteButton"
+            onClick={() => handleDeleteBooking(selectedBooking.id)}
+          >
+            Delete Booking
+          </button>
+        )}
       </div>
 
       {/*STYLESHEET*/}
@@ -124,6 +214,18 @@ export const BookingDetail = ({
           transition: background-color 0.2s;
           margin: auto;
           margin-top: 12px;
+        }
+        .confirmButton {
+          background: #4caf50;
+        }
+        .confirmButton:hover {
+          background: #388e3c;
+        }
+        .rejectButton {
+          background: #ff2626;
+        }
+        .rejectButton:hover {
+          background: #a40000;
         }
       `}</style>
     </>

@@ -7,4 +7,5 @@ export interface Booking {
   phone: string;
   type: string;
   notes?: string;
+  confirmed: boolean;
 }
