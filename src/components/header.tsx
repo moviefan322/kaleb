@@ -52,7 +52,11 @@ export default function Header({
   return (
     <>
       <div className={`container ${scrolled ? "scrolled" : ""}`}>
-        <div className="text-section">
+        <div
+          className="text-section"
+          onClick={() => (window.location.href = "/")}
+          style={{ cursor: "pointer" }}
+        >
           <p className="kaleb">Kaleb Clark</p>
           <p className="sub">MERIDIAN YOGA + BODY WORK</p>
         </div>
@@ -103,6 +107,11 @@ export default function Header({
           flex-direction: column;
           justify-content: center;
           align-items: center;
+          cursor: pointer;
+        }
+        .text-section:hover .kaleb,
+        .text-section:hover .sub {
+          color: var(--pink);
         }
         .kaleb {
           font-size: 32px;

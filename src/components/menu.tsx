@@ -19,9 +19,9 @@ export default function Menu({ closeMenu }: { closeMenu: () => void }) {
         <li>
           <button onClick={() => navigateToPage("/about")}>About</button>
         </li>
-        <li>
+        {/* <li>
           <button onClick={() => navigateToPage("/shop")}>Shop</button>
-        </li>
+        </li> */}
         <li>
           <button onClick={() => navigateToPage("/login")}>Admin</button>
         </li>
@@ -47,13 +47,20 @@ export default function Menu({ closeMenu }: { closeMenu: () => void }) {
 
         li {
           margin: 1rem 0;
-          font-size: 24px;
-          color: var(--blues);
         }
 
-        a {
-          text-decoration: none;
-          font-weight: bold;
+        li button {
+          font-size: 24px;
+          color: var(--blues);
+          background: none;
+          border: none;
+          cursor: pointer;
+          font-family: inherit;
+          font-weight: inherit;
+          transition: color 0.2s;
+        }
+        li button:hover {
+          color: var(--pink);
         }
       `}</style>
     </div>

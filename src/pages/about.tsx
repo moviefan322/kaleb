@@ -86,7 +86,7 @@ export default function About() {
             ))}
           </ul>
         </div>
-        <button className="mainButton" onClick={() => router.push('/booking')}>
+        <button className="mainButton" onClick={() => router.push("/booking")}>
           Book a Class Or Session With Kaleb
         </button>
       </div>
@@ -114,8 +114,10 @@ export default function About() {
         .photo1-wrapper {
           position: relative;
           width: 100%;
-          height: 500px;
-          min-width: 300px;
+          max-width: 340px;
+          height: 540px;
+          min-width: 220px;
+          margin: 0 auto;
           display: flex;
           justify-content: center;
           align-items: center;
@@ -131,11 +133,26 @@ export default function About() {
 
         .image-wrapper {
           position: absolute;
-          width: 130%; /* Make it wider than the container */
-          height: 130%; /* Increase height slightly */
-          left: -30px; /* Shift left to reveal the missing area */
-          top: -40px;
-          transform: rotate(20deg);
+          width: 100%;
+          height: 100%;
+          left: 0;
+          top: 0;
+          transform: none;
+        }
+
+        @media (max-width: 700px) {
+          .photo1-wrapper {
+            height: 340px;
+            max-width: 100vw;
+            min-width: 0;
+          }
+          .image-wrapper {
+            width: 130%;
+            height: 130%;
+            left: -30px;
+            top: 0;
+            transform: rotate(20deg);
+          }
         }
 
         .section-header {

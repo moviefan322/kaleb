@@ -40,28 +40,20 @@ export default function Home() {
           <div className="text-section top-text-section">
             <h3>Meridian Yoga therapy + Bodywork +</h3>
             <p>
-              Katharsis can be described as release of strong emotions to
-              achieve a state of renewal and restoration. By processing our
-              feelings and emotions and acknowledging the connection they have
-              to our mental, spiritual and physical well being we can begin to
-              heal ourselves from the root.
+              Katharsis, can be described as the release of emotions to achieve
+              a state of renewal and restoration. By processing our feelings and
+              acknowledging the connection they have to our overall health and
+              well being we can begin to heal ourselves from the root up.
             </p>
             <p>
               Our purpose is to provide a clear pathway to an embodied practice
               that is genuinely designed for each individual to support and aid
-              in their body{`'`}s innate wisdom to heal.
+              in their body&apos;s innate wisdom to heal.
             </p>
             <p>
-              While offering services and products to further enhance the
-              healing experience through the use of meridian yoga therapy, Thai
-              yoga massage, (self)acupressure, cupping, ayurvedic self care
-              rituals & products, and crystal healing. We strongly believe the
-              most powerful healing weapon is YOU.
-            </p>
-            <p className="quote">
-              “(Wo)Man is God afraid, (wo)man can only relinquish fear by
-              walking up to what he/she is afraid of.” <br />
-              <span className="quote-author">-Florence Scovel Shinn</span>
+              While offering practices and products to further enhance the
+              healing experience We strongly believe the most powerful healing
+              tool is YOU.
             </p>
           </div>
         </div>
@@ -84,35 +76,43 @@ export default function Home() {
               Meridian yoga therapy <br />+ Class schedule
             </h3>
             <p>
-              Meridian Yoga is a therapeutic method of meditative movements and
-              postures that fuse the eastern sciences of Yoga and TCM to foster
-              a deep awareness of the energies that inhabit our bodies and the
-              spaces they occupy, often causing us to feel and associate with
-              certain emotions that can be destructive over a long period of
-              time
+              Meridian Yoga is the therapeutic science of meditative breathing,
+              postures, yogic practices and philosophy that fuse Yoga and
+              Traditional Chinese medicine to foster an awareness of our
+              internal experience. Often allowing us to observe and approach
+              mental and emotional patterns that can inhibit our evolution over
+              a long period of time with a deeper wisdom and clarity.
             </p>
-            <button className="mainButton">VIEW SCHEDULE</button>
+            <button
+              className="mainButton"
+              onClick={() => {
+                window.open(
+                  "https://dayayoga.studiogrowth.com/?instructors=466",
+                  "_blank"
+                );
+              }}
+            >
+              VIEW SCHEDULE
+            </button>
           </div>
         </div>
         <div className="lg-row">
           <div className="text-section">
-            <h3>BodyWork + thai yoga massage + accup + cupping</h3>
+            <h3>BodyWork - thai yoga massage/accupressure & cupping</h3>
             <p>
               <b>Thai Yoga</b> massage is a synthesis of yoga, Ayurveda, and
               meditation. In receiving a Thai yoga massage, one is passively
-              receiving the benefits of the practice of Yoga. This technique can
-              be described as assisted Hatha yoga. Thai yoga massage
-              incorporates martial arts moves, rhythmic motion, palming, and
-              thumbing along energy lines of the recipient by the practitioner.
-              Along with gentle stretching and breathwork.
+              receiving the benefits of a deep asana practice. This technique
+              can be described as assisted Hatha yoga. Thai yoga massage
+              incorporates martial arts movements, rhythmic motion, palming, and
+              thumbing along energy channels (sen lines) by the practitioner.
+              Along with gentle stretching and breathing.
             </p>
             <p>
               Thai Yoga massage improves circulation, relieves muscular tension
-              and spasms, helps expedite metabolism, boosts the immune system,
-              and balances the body energetically, inducing a calm mental state.
-              The origins of this art can be traced back 2,500 years to India
-              and the spread of Buddhism. The founding father of Thai Yoga
-              massage was Jivaka Kumarbhaccha. A celebrated yogi and doctor.
+              and spasms. It excels the metabolism, boosts the immune system,
+              and balances the bodies energy, inducing a calm mental state and
+              relaxed body.
             </p>
             <p>
               <b>Acupressure</b> - The body consists of 12 major meridian
@@ -122,19 +122,20 @@ export default function Home() {
               “streams or currents” of energy. Along each meridian lie points
               that when stimulated by pressure, stretching, friction, and
               massage can access deeper energy and relieve pain, tension and
-              stress. By pressing and exploring along these pathways we can find
-              clues and insights to healing the root cause of your discomfort,
-              tension and pain.
+              stress. By pressing and holding, palming and thumbing along these
+              pathways we can stimulate these pathways and encourage deep
+              release and relief
             </p>
             <p>
-              <b>Cupping</b> - When muscles or connective get tense or
-              contracted for long periods of time, the blood flow diminishes.
-              Cupping Therapy is an ancient technique that uses plastic cups of
-              various sizes to suction areas of skin and muscle. Cupping is
-              great for overall relaxation and to release muscle tension because
-              it moves blood and Qi stagnation. Cupping stretches the tissue up
-              away from the body and draws in new fresh blood and fluids to the
-              staganted areas, revitalizing the flow of energy and nutrients.
+              <b>Cupping</b> - When muscles and connective tissue are tense or
+              contracted for long periods of time, the flow of blood, nutrients,
+              and energy(qi) diminishes. Cupping Therapy is an ancient technique
+              that uses plastic or glass cups of various sizes to create a
+              vacuum effect on areas of skin. As the tissue is lifted up away
+              from the body fresh blood and fluids are drawn to the stagnated
+              areas, revitalizing the flow of nutrients and replenishing qi. Due
+              to its therapeutic effects cupping is great for relaxation and
+              reducing inflammation
             </p>
           </div>
           <div className="photo-oval-wrapper">
@@ -156,16 +157,44 @@ export default function Home() {
         <div className="user-testimony-section">
           <h3>Kind words from past clients and students</h3>
           <div className="testimony">
-            <p className="testbody">{`"Kaleb’s yoga classes and bodywork have been truly life-changing. His deep understanding of both yoga and massage therapy creates a holistic experience that goes beyond just movement—it’s about healing from the inside out. His presence is grounding, and he tailors each session to what your body truly needs. After just a few sessions, I noticed a significant improvement in my flexibility, posture, and overall well-being. His Meridian Yoga approach has helped me release years of tension I didn’t even realize I was carrying. Whether you're looking for deep tissue relief or a mindful yoga practice, Kaleb’s expertise will leave you feeling lighter, stronger, and more in tune with your body. I can’t recommend him enough!"`}</p>
-            <p className="testauth">-Sarah M.</p>
-          </div>
-          <div className="testimony">
-            <p className="testbody">{`"I’ve had many yoga teachers and massage therapists over the years, but Kaleb is truly one of a kind. His ability to read the body and provide exactly what it needs is unparalleled. His yoga classes are accessible yet deeply powerful, helping me move with more awareness and ease. His massage work is just as intuitive—he knows exactly where to apply pressure, how to release tension, and leaves you feeling completely renewed. After each session, I feel like I’ve shed layers of stress, both physically and emotionally. If you’re looking for someone who blends strength, precision, and deep care into their practice, Kaleb is your guy!"`}</p>
-            <p className="testauth">-James R.</p>
-          </div>
-          <div className="testimony">
-            <p className="testbody">{`"Kaleb is more than just a yoga instructor or a massage therapist—he’s a true healer. From the first class I took with him, I felt an immediate sense of ease and belonging. He has a gift for making yoga feel approachable, no matter your level, and his hands-on adjustments are incredibly helpful. When I started getting massages with him, I realized just how much my body had been holding onto. His techniques, particularly his knowledge of meridian points, have helped me with chronic pain in ways no one else has. Every session is tailored, intentional, and leaves me feeling physically and mentally recharged. He is someone who truly cares about his clients, and that makes all the difference!"`}</p>
+            <div className="speech-bubble">
+              <p className="testbody">
+                {
+                  "Kaleb is an exceptional yoga teacher and masseuse. His thoughtful approach, expert hands-on adjustments, and deep knowledge of yoga create a practice that is both challenging and transformative. As both a teacher and a masseuse, he is a true master of his craft. Every session leaves me feeling stronger, more aligned, and deeply cared for. Highly recommended"
+                }
+              </p>
+            </div>
             <p className="testauth">-Emily S.</p>
+          </div>
+          <div className="testimony left">
+            <div className="speech-bubble">
+              <p className="testbody">
+                {
+                  "I recently had a Thai Yoga massage with Kaleb, and it was wonderful! Kaleb is incredibly skilled, attentive, gentle, but also firm when needed. He listens to needs and responds to things that feel good or less good. The massage left me feeling completely relaxed, stretched, and loose in my body. I highly recommend Kaleb to anyone looking for a restorative and energizing Thai massage :)"
+                }
+              </p>
+            </div>
+            <p className="testauth">Esther-</p>
+          </div>
+          <div className="testimony">
+            <div className="speech-bubble">
+              <p className="testbody">
+                {
+                  "I always feel a balance of energized and relaxed after receiving a Thai massage from Kaleb. His in depth understanding of acupressure & the meridian channels coupled with his massage techniques create a well rounded experience. He leads all his sessions with intention & communicates clearly to ensure you’re receiving exactly what your body needs in that moment. Could not recommend more."
+                }
+              </p>
+            </div>
+            <p className="testauth">-Jodie</p>
+          </div>
+          <div className="testimony left">
+            <div className="speech-bubble">
+              <p className="testbody">
+                {
+                  "Kaleb's wisdom, emotional and physical attunement, and natural intuition are evident in each class and treatment I experienced with him. As a long-time yoga student, I am drawn to classes and teachers who have the capacity to leave students with new insights into themselves, whether in their bodies or their sense of self. Kaleb is, without a doubt, one of these special teachers. As a student and massage client of his, I find myself learning something new about my practice and abilities through Kaleb’s instruction, class leadership, gentle posture correction and guidance, and his excitement and enthusiasm about yoga and physical care in general. Kaleb is a true inspiration and a unique soul, and I recommend his teaching to anyone who seeks growth and true self-development."
+                }
+              </p>
+            </div>
+            <p className="testauth">Edo G.-</p>
           </div>
         </div>
       </div>
@@ -307,6 +336,12 @@ export default function Home() {
           font-weight: 400;
           color: var(--blues);
           text-align: right;
+          margin-right: 0;
+          margin-top: 1.5rem;
+          position: absolute;
+          right: 40px;
+          top: 100%;
+          white-space: nowrap;
         }
         .line {
           width: 100%;
@@ -408,6 +443,89 @@ export default function Home() {
           }
           .user-testimony-section h3 {
             font-size: 42px;
+          }
+        }
+
+        .user-testimony-section .testimony {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-end;
+          margin-bottom: 4.5rem;
+          position: relative;
+        }
+        .user-testimony-section .testimony.left {
+          align-items: flex-start;
+        }
+        .user-testimony-section .testimony .speech-bubble {
+          position: relative;
+          background: #ffb6d5;
+          color: #333;
+          border-radius: 32px 32px 32px 32px/40px 40px 40px 40px;
+          padding: 0 2.5rem;
+          margin-right: 2.5rem;
+          max-width: 600px;
+          min-width: 180px;
+          font-size: 1.1rem;
+          box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+        }
+        .user-testimony-section .testimony.left .speech-bubble {
+          margin-left: 2.5rem;
+          margin-right: 0;
+        }
+        .user-testimony-section .testimony .speech-bubble:after {
+          content: "";
+          position: absolute;
+          right: 43px;
+          bottom: -14px;
+          width: 0;
+          height: 0;
+          border-left: 18px solid transparent;
+          border-right: 18px solid transparent;
+          border-top: 18px solid #ffb6d5;
+        }
+        .user-testimony-section .testimony.left .speech-bubble:after {
+          left: 43px;
+          right: auto;
+          bottom: -14px;
+        }
+        @media (max-width: 700px) {
+          .user-testimony-section .testimony .speech-bubble:after {
+            right: 23px;
+            bottom: -10px;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-top: 12px solid #ffb6d5;
+          }
+          .user-testimony-section .testimony.left .speech-bubble:after {
+            left: 23px;
+            right: auto;
+            bottom: -10px;
+          }
+        }
+        .user-testimony-section .testimony .testauth {
+          font-size: 18px;
+          font-weight: 400;
+          color: var(--blues);
+          text-align: right;
+          margin-right: 0;
+          margin-top: 1.5rem;
+          position: absolute;
+          right: 40px;
+          top: 100%;
+          white-space: nowrap;
+        }
+        .user-testimony-section .testimony.left .testauth {
+          text-align: left;
+          left: 40px;
+          right: auto;
+        }
+        @media (max-width: 700px) {
+          .user-testimony-section .testimony .testauth {
+            right: 12px;
+          }
+          .user-testimony-section .testimony.left .testauth {
+            left: 12px;
+            right: auto;
           }
         }
       `}</style>
