@@ -57,7 +57,7 @@ export default function Header({
           onClick={() => (window.location.href = "/")}
           style={{ cursor: "pointer" }}
         >
-          <p className="kaleb">Kathatsis</p>
+          <p className="kaleb">Katharsis</p>
           <p className="sub">MERIDIAN YOGA + BODY WORK</p>
         </div>
         {isAdmin && (
