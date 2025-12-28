@@ -96,63 +96,7 @@ export default function Home() {
             </button>
           </div>
         </div>
-        <div className="lg-row">
-          <div className="text-section">
-            <h3>BodyWork - thai yoga massage/accupressure & cupping</h3>
-            <p>
-              <b>Thai Yoga</b> massage is a synthesis of yoga, Ayurveda, and
-              meditation. In receiving a Thai yoga massage, one is passively
-              receiving the benefits of a deep asana practice. This technique
-              can be described as assisted Hatha yoga. Thai yoga massage
-              incorporates martial arts movements, rhythmic motion, palming, and
-              thumbing along energy channels (sen lines) by the practitioner.
-              Along with gentle stretching and breathing.
-            </p>
-            <p>
-              Thai Yoga massage improves circulation, relieves muscular tension
-              and spasms. It excels the metabolism, boosts the immune system,
-              and balances the bodies energy, inducing a calm mental state and
-              relaxed body.
-            </p>
-            <p>
-              <b>Acupressure</b> - The body consists of 12 major meridian
-              pathways that form a continuous web-like network along which vital
-              energy flows. These structures are invisible to the naked eye but
-              travel through our connective tissue. You can think of them as
-              “streams or currents” of energy. Along each meridian lie points
-              that when stimulated by pressure, stretching, friction, and
-              massage can access deeper energy and relieve pain, tension and
-              stress. By pressing and holding, palming and thumbing along these
-              pathways we can stimulate these pathways and encourage deep
-              release and relief
-            </p>
-            <p>
-              <b>Cupping</b> - When muscles and connective tissue are tense or
-              contracted for long periods of time, the flow of blood, nutrients,
-              and energy(qi) diminishes. Cupping Therapy is an ancient technique
-              that uses plastic or glass cups of various sizes to create a
-              vacuum effect on areas of skin. As the tissue is lifted up away
-              from the body fresh blood and fluids are drawn to the stagnated
-              areas, revitalizing the flow of nutrients and replenishing qi. Due
-              to its therapeutic effects cupping is great for relaxation and
-              reducing inflammation
-            </p>
-          </div>
-          <div className="photo-oval-wrapper">
-            <div className="photo-oval-container">
-              <div className="photo1-container image-mirror rotate">
-                <Image
-                  priority
-                  src="/images/K-30.jpg"
-                  alt="Photo 3"
-                  layout="fill"
-                  objectFit="cover"
-                  quality={80}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
+
         <div className="line"></div>
         <div className="user-testimony-section">
           <h3>Kind words from past clients and students</h3>
