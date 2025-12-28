@@ -14,6 +14,12 @@ export default function Menu({ closeMenu }: { closeMenu: () => void }) {
           <button onClick={() => navigateToPage("/")}>Home</button>
         </li>
         <li>
+          <button onClick={() => navigateToPage("/thaimassage")}>Thai Massage</button>
+        </li>
+        <li>
+          <button onClick={() => navigateToPage("/acupressure")}>Cupping/Acupressure</button>
+        </li>
+        <li>
           <button onClick={() => navigateToPage("/booking")}>Booking</button>
         </li>
         <li>
@@ -22,9 +28,6 @@ export default function Menu({ closeMenu }: { closeMenu: () => void }) {
         {/* <li>
           <button onClick={() => navigateToPage("/shop")}>Shop</button>
         </li> */}
-        <li>
-          <button onClick={() => navigateToPage("/login")}>Admin</button>
-        </li>
       </ul>
 
       <style jsx>{`

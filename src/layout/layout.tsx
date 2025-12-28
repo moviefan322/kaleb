@@ -47,6 +47,7 @@ export default function Layout({ children, isAdmin, setIsAdmin }: LayoutProps) {
           flex: 1;
           padding-top: 75px;
           min-height: 100vh;
+          min-width: 100vw;
           display: flex;
           flex-direction: column;
           align-items: center;
