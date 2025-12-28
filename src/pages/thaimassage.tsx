@@ -66,12 +66,14 @@ export default function ThaiMassage() {
           justify-content: center;
           align-items: flex-start;
           width: 100%;
+          margin: auto;
           margin-bottom: 5rem;
           margin-top: 3rem;
         }
         .text-section {
           overflow: wrap;
           width: 50%;
+          margin-left: 1.5rem;
         }
         .text-section h3 {
           font-size: 48px;

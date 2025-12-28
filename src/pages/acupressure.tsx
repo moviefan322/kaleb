@@ -79,6 +79,7 @@ export default function ThaiMassage() {
         .text-section {
           overflow: wrap;
           width: 50%;
+          margin-left: 1.5rem;
         }
         .text-section h3 {
           font-size: 48px;
